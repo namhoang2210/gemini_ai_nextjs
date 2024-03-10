@@ -67,40 +67,6 @@ export default function Home() {
     setData(newData);
   };
 
-  const formatBoldText = (text) => {
-    const parts = text.split('**' | '```');
-    return parts.map((part, index) =>
-      index % 2 === 0 ? (
-        <span key={index}>{part}</span>
-      ) : (
-        <strong key={index}>{part}</strong>
-      )
-    );
-  };
-
-  const formatBoldAndCodeText = (text) => {
-    const parts = text.split(/(\*\*|```)/);
-    let inCodeBlock = false;
-    let strongText = false
-
-    return parts.map((part, index) => {
-      if (part === '**') {
-        strongText = !strongText
-
-        if(strongText) {
-          return <span key={index}>{part}</span>
-        } else {
-          return <strong key={index}>{part}</strong>
-        }
-      } else if (part === '```') {
-        inCodeBlock = !inCodeBlock;
-        return inCodeBlock ? <code key={index} /> : '';
-      } else {
-        return inCodeBlock ? <pre style={{ background: 'black'}}><code key={index}>{part}</code></pre> : part;
-      }
-    });
-  };
-
   const handleKeyDown = (e) => {
     if (e.key === 'Enter') {
       e.preventDefault(); 
@@ -108,14 +74,6 @@ export default function Home() {
     }
   };
 
-  const renderers = {
-    code: ({ language, value }) => (
-      <pre style={{ backgroundColor: '#f3f3f3', padding: '10px', borderRadius: '4px' }}>
-        <code style={{ color: '#333' }}>{value}</code>
-      </pre>
-    ),
-  };
-  
   return (
     <div>
       <div className="fixed top-0 w-full z-10 bg-white py-3 md:py-4 text-xl md:text-3xl font-bold ">
@@ -125,7 +83,7 @@ export default function Home() {
       </div>
       <Box 
         id="chat-box"
-        className="h-[calc(100vh-95px)] md:-h-[calc(100vh-125px)] overflow-auto p-4 md:p-6 text-[15px] md:text-base transition-all duration-300 ease-in-out"
+        className="h-[calc(100vh-95px)] md:-h-[calc(100vh-125px)] overflow-auto p-4 md:p-6 text-[15px] md:text-base"
         sx={{
           '&::-webkit-scrollbar': {
             width: '5px',
@@ -144,8 +102,8 @@ export default function Home() {
           >
             {item?.role === 'user' ? (
               <div className="mb-4">
-                <div className="flex justify-end">
-                  <div className="bg-[#8c7fec] max-w-[70%] text-white p-2 md:p-3 rounded-xl mt-1 whitespace-pre-wrap">
+                <div className="flex justify-end transition-all duration-300 ease-in-out">
+                  <div className="bg-[#8c7fec] max-w-[70%] text-white p-2 md:p-3 rounded-xl mt-1 whitespace-pre-wrap ">
                     {item?.parts}
                   </div>
                 </div>
@@ -156,7 +114,7 @@ export default function Home() {
                   <Avatar name='Bot' src='https://png.pngtree.com/png-vector/20240125/ourlarge/pngtree-little-cute-robot-funny-virtual-assistant-bot-png-image_11549965.png' />
                   <div className="font-semibold text-gray-600">Bot đần</div>
                 </div>
-                <div className="whitespace-pre-wrap bg-[#e9ecf5] max-w-[70%] text-gray-900 p-2 md:p-3 rounded-xl mt-1">
+                <div className="whitespace-pre-wrap bg-[#e9ecf5] max-w-[70%] text-gray-800 p-2 md:p-3 rounded-xl mt-1 transition-all duration-300 ease-in-out">
                   <ReactMarkdown>{item?.parts}</ReactMarkdown>
                 </div>
               </div>
