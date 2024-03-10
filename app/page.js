@@ -86,9 +86,9 @@ export default function Home() {
 
   return (
     <div>
-      <div className="fixed top-0 w-full z-10 bg-white py-3 md:py-4 text-xl md:text-3xl font-semibold md:font-bold ">
+      <div className="fixed top-0 w-full z-10 bg-white py-3 md:py-4 text-xl md:text-3xl font-bold ">
         <div className="text-transparent bg-clip-text bg-gradient-to-br from-[#4a84f1] to-[#d36677] px-4 md:px-6">
-          Gemini AI
+          Blossom AI
         </div>
       </div>
       <Box 
