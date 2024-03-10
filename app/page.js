@@ -1,5 +1,5 @@
 'use client'
-import { Avatar, Button, Input, Skeleton, Stack } from "@chakra-ui/react";
+import { Avatar, Box, Button, Input, Skeleton, Stack } from "@chakra-ui/react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useState, useRef, useEffect } from "react";
 
@@ -13,6 +13,11 @@ export default function Home() {
   useEffect(() => {
     inputRef.current.focus();
   }, []);
+
+  useEffect(() => {
+    const chatBox = document.getElementById("chat-box");
+    chatBox.scrollTop = chatBox.scrollHeight;
+  }, [data]);
 
   const handleSendQuestion = async () => {
     if (!inputText) {
@@ -51,11 +56,14 @@ export default function Home() {
         parts: text,
       }];
   
-      setData(newData);
     } catch (error) {
-      alert('server error')
+      newData = [...newData, {
+        role: "model",
+        parts: 'Opps! Server error, please try again later.',
+      }];
     }
-   
+
+    setData(newData);
   };
 
   const formatBoldText = (text) => {
@@ -77,22 +85,35 @@ export default function Home() {
   };
 
   return (
-    <div className="p-4 md:p-6">
-      <div className="min-h-[calc(100vh-105px)] md:min-h-[calc(100vh-120px)]">
-        {data?.map((item, index) => (
+    <div>
+      <div className="fixed top-0 w-full z-10 bg-white py-3 md:py-4 text-xl md:text-3xl font-semibold md:font-bold ">
+        <div className="text-transparent bg-clip-text bg-gradient-to-br from-[#4a84f1] to-[#d36677] px-4 md:px-6">
+          Gemini AI
+        </div>
+      </div>
+      <Box 
+        id="chat-box"
+        className="h-[calc(100vh-85px)] md:-h-[calc(100vh-125px)] overflow-auto p-4 md:p-6 text-[15px] md:text-base transition-all duration-300 ease-in-out"
+        sx={{
+          '&::-webkit-scrollbar': {
+            width: '5px',
+            backgroundColor: 'white',
+          },
+          '&::-webkit-scrollbar-thumb': {
+            backgroundColor: '#e9ecf5',
+            borderRadius: '5px',
+          },
+        }}
+      >
+        <div className="h-10 md:h-12"></div>
+        {data.length ? data?.map((item, index) => (
           <div 
             key={`chat-${index}`}
           >
             {item?.role === 'user' ? (
               <div className="mb-4">
                 <div className="flex justify-end">
-                  <div className="flex items-center gap-2">
-                    <div className="font-semibold text-gray-600">Hoàng Nam</div>
-                    <Avatar name='Bot' src='https://toigingiuvedep.vn/wp-content/uploads/2022/01/anh-meo-cute.jpg' />
-                  </div>
-                </div>
-                <div className="flex justify-end">
-                  <div className="bg-blue-400 max-w-[70%] text-white p-2 md:p-3 rounded-lg mt-1 whitespace-pre-wrap">
+                  <div className="bg-[#8c7fec] max-w-[70%] text-white p-2 md:p-3 rounded-xl mt-1 whitespace-pre-wrap">
                     {item?.parts}
                   </div>
                 </div>
@@ -103,14 +124,18 @@ export default function Home() {
                   <Avatar name='Bot' src='https://png.pngtree.com/png-vector/20240125/ourlarge/pngtree-little-cute-robot-funny-virtual-assistant-bot-png-image_11549965.png' />
                   <div className="font-semibold text-gray-600">Bot đần</div>
                 </div>
-                <div className="whitespace-pre-wrap bg-blue-400 max-w-[70%] text-white p-2 md:p-3 rounded-lg mt-1">
+                <div className="whitespace-pre-wrap bg-[#e9ecf5] max-w-[70%] text-gray-900 p-2 md:p-3 rounded-xl mt-1">
                   {formatBoldText(item?.parts)}
                 </div>
               </div>
             )
           }  
           </div>
-        ))}
+        )) : (
+          <div className="text-xl md:text-4xl md:mt-4 font-semibold text-transparent bg-clip-text bg-gradient-to-br from-[#4a84f1] to-[#d36677]">
+            Hello! How can I help you today?
+          </div>
+        )}
 
         {loading && (
           <div>
@@ -127,24 +152,39 @@ export default function Home() {
           </div>
         )}
        
-      </div>
+      </Box>
 
-      <div className="flex gap-2 md:gap-4 mt-6">
+      <div className="flex gap-2 md:gap-4 mt-6 bottom-5 md:bottom-6 fixed w-full px-4 md:px-6">
         <Input 
+          position={'relative'}
+          focusBorderColor='#2ea7fc'
+          rounded={'999px'}
+          size={{ base:'md', md:'lg'}}
           ref={inputRef}
           placeholder='Nhập câu hỏi'
           value={inputText}
           onChange={(e) => setInputText(e.target.value)}  
           onKeyDown={handleKeyDown}
+          isDisabled={loading}
         />
 
         <Button
+          position={'absolute'}
+          zIndex={10}
+          right={{base:2 ,md:8}}
+          variant='ghost'
           isLoading={loading}
           onClick={() => handleSendQuestion()}
           colorScheme='twitter'
           paddingX={5}
+          top={{base:0 ,md:1}}
+          _hover={{
+            bg: 'none'
+          }}
         >
-            Gửi
+          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+            <path stroke-linecap="round" stroke-linejoin="round" d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+          </svg>
         </Button>
       </div>
     </div>
