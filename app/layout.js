@@ -5,8 +5,8 @@ import "./globals.css";
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata = {
-  title: "Blosssom AI with Gemeni API",
-  description: "Chat bot is built on Nextjs + Gemeni api",
+  title: "Blosssom AI with Gemini API",
+  description: "Chat bot is built on Nextjs + Gemini api",
 };
 
 export default function RootLayout({ children }) {

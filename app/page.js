@@ -3,6 +3,10 @@ import { Avatar, Box, Button, Input, Skeleton, Stack } from "@chakra-ui/react";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { useState, useRef, useEffect } from "react";
 import ReactMarkdown from 'react-markdown';
+import remarkGfm from 'remark-gfm';
+import rehypeRaw from 'rehype-raw';
+import { Prism as SyntaxHighlighter } from 'react-syntax-highlighter';
+import { dracula } from 'react-syntax-highlighter/dist/cjs/styles/prism';
 
 export default function Home() {
   const API_KEY = 'AIzaSyAMHA4SLgq6Gtbhfr4YOyS1qYXV7rvEcYo';
@@ -115,7 +119,27 @@ export default function Home() {
                   <div className="font-semibold text-gray-600">Bot đần</div>
                 </div>
                 <div className="whitespace-pre-wrap bg-[#e9ecf5] max-w-[70%] text-gray-800 p-2 md:p-3 rounded-xl mt-1 transition-all duration-300 ease-in-out">
-                  <ReactMarkdown>{item?.parts}</ReactMarkdown>
+                  <ReactMarkdown 
+                    remarkPlugins={[remarkGfm]}
+                    rehypePlugins={[rehypeRaw]}
+                    components={{
+                      code({ node, inline, className, children, ...props }) {
+                        const match = /language-(\w+)/.exec(className || '');
+
+                        return !inline && match ? (
+                          <SyntaxHighlighter style={dracula} PreTag="div" language={match[1]} {...props}>
+                            {String(children).replace(/\n$/, '')}
+                          </SyntaxHighlighter>
+                        ) : (
+                          <code className={className} {...props}>
+                            {children}
+                          </code>
+                        );
+                      },
+                    }}
+                  >
+                    {item?.parts}
+                  </ReactMarkdown>
                 </div>
               </div>
             )

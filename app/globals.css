@@ -2,14 +2,11 @@
 @tailwind components;
 @tailwind utilities;
 
-pre {
-  background-color: #f4f4f4;
-  padding: 10px;
-  border: 1px solid #ccccccbb;
-  border-radius: 5px;
-  overflow: auto;
-  font-family: 'Courier New', monospace;
-  font-size: 14px;
-  line-height: 1.5;
-  color: #333;
+code {
+  background-color: rgba(132, 135, 141, 0.24);
+  margin: 0 5px;
+  font-size: 13px;
+  padding: 2px 3px;
+  border-radius: 3px;
+  color: #d7760ee8;
 }
